@@ -55,6 +55,76 @@
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   <script>
-    $(".flipbook").turn();
+    function resizeFlipbook() {
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+        // 10px space above and below
+      const availableHeight = screenHeight - 20;
+
+        // MOBILE
+      if (screenWidth <= 768) {
+
+          $(".flipbook").turn("display", "single");
+
+            // Page ratio = 1240 / 1754
+          const pageRatio = 1240 / 1754;
+
+            // Leave 10px on left and right
+          const pageWidth = Math.min(
+              screenWidth - 20,
+              availableHeight * pageRatio
+          );
+
+          const pageHeight = pageWidth / pageRatio;
+          $(".flipbook").turn("size", pageWidth, pageHeight);
+
+      }
+
+        // DESKTOP / TABLET
+      else {
+
+          $(".flipbook").turn("display", "double");
+          const pageRatio = 1240 / 1754;
+
+            // Two pages side by side
+          const maxPageWidth = (screenWidth - 20) / 2;
+
+          const maxPageHeight = availableHeight;
+
+          const pageHeight = Math.min(
+              maxPageHeight,
+              maxPageWidth / pageRatio
+          );
+
+          const pageWidth = pageHeight * pageRatio;
+
+          $(".flipbook").turn(
+              "size",
+              pageWidth * 2,
+              pageHeight
+          );
+      }
+    }
+
+
+    // Start flipbook
+    $(".flipbook").turn({
+        display: "double",
+        duration: 600,
+        gradients: true,
+        acceleration: true,
+        autoCenter: true
+    });
+
+
+    // Size it correctly
+    resizeFlipbook();
+
+
+    // Resize when screen changes
+    $(window).on("resize orientationchange", function () {
+        resizeFlipbook();
+    });
   </script>
 </html>
